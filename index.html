@@ -1,36 +1,38 @@
-<!-- import file -->
-<link rel="stylesheet" href="./leaflet.css"/>
 <script src="./leaflet.js"></script>
-<!-- add map's height -->
+<link rel="stylesheet" href="./leaflet.css"/>
+<script src="./leaflet.ChineseTmsProviders.js"></script>
+
 <style>
-#mapDiv { height: 100%; }
+// #mapDiv { height: 100%; }
+.test { height: 100%; }
 </style>
-<!-- add a map's div id-->
-<div id="mapDiv"></div>
+<div id="mapDiv" class='test'></div>
 <script>
-        var url = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-        // init
-        var leafletMap = L.map('mapDiv').setView([41, 123], 5);
-        L.tileLayer(url, {
-                maxZoom: 18,
-                id: 'osm'
-        }).addTo(leafletMap);
-        // add a marker and binding a popup，default open
-        L.marker([41, 123]).addTo(leafletMap)
-                .bindPopup("<b>Hello world!</b><br />I am a popup.").openPopup();
-        // add a polygon
-        L.polygon([
-                [41, 123],
-                [39, 121],
-                [41, 126]
-        ]).addTo(leafletMap).bindPopup("I am a polygon.");
-        // add a event about create popup
-        var popup = L.popup();
-        function onMapClick(e) {
-                popup
-                        .setLatLng(e.latlng)
-                        .setContent("You clicked the map at " + e.latlng.toString())
-                        .openOn(leafletMap);
-        }
-        leafletMap.on('click', onMapClick);
+    var tianditu = L.tileLayer.chinaProvider('TianDiTu.Normal.Map', {
+        maxZoom: 18,
+        minZoom: 1
+    });
+	var tianditu_anno = L.tileLayer.chinaProvider('TianDiTu.Normal.Annotion', {
+        maxZoom: 18,
+        minZoom: 1
+    });
+	var osm = L.tileLayer.chinaProvider('OSM.Normal.Map', {
+        maxZoom: 18,
+        minZoom: 1
+    });
+    // we can add multiply layers in here
+    var tiandituLayers = {"TianDiTu": tianditu}
+	var osmLayers = {"OSM": osm}
+    
+    var map = L.map("mapDiv", {
+        center: [41.80, 123.43],
+        zoom: 7,
+        layers: [tianditu, tianditu_anno],
+        zoomControl: false
+    });
+    L.control.layers(tiandituLayers, osmLayers).addTo(map);
+    L.control.zoom({
+        zoomInTitle: 'Zoom in',
+        zoomOutTitle: 'Zoom out'
+    }).addTo(map);
 </script>
