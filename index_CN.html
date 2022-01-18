@@ -1,0 +1,31 @@
+<script src="./leaflet.js"></script>
+<link rel="stylesheet" href="./leaflet.css" />
+<script src="leaflet.ChineseTmsProviders.js"></script>
+
+<style>
+//#mapDiv { height: 600px; }
+.test { height: 600px; }
+</style>
+<div id="mapDiv" class='test'></div>
+<script>
+    //插件把 定义了多个国内的瓦片图层，我们只需要通过提供的方法访问到相应的图层即可
+    //从插件代码可以看出 需要传入 providerName.mapName.mapType 从插件代码中查找所需要的值
+    var test = L.tileLayer.chinaProvider('TianDiTu.Normal.Map', {
+        maxZoom: 18,
+        minZoom: 5
+    });
+    //此处可以定义多个图层，并可以再页面中进行选择
+    var baseLayers = {"测试地图":test}
+    
+    var map = L.map("mapDiv", {
+        center: [41.80, 123.43],
+        zoom: 7,
+        layers: [test],
+        zoomControl: false
+    });
+    L.control.layers(baseLayers, null).addTo(map);
+    L.control.zoom({
+        zoomInTitle: '放大',
+        zoomOutTitle: '缩小'
+    }).addTo(map);
+</script>

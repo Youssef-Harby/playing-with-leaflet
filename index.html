@@ -1,16 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leaflet</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin="" />
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div id="map"></div>
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
-    <script src="./app.js"></script>
-</body>
-</html>
+<!-- 引入 文件 -->
+<link rel="stylesheet" href="./leaflet.css" />
+<script src="./leaflet.js"> </script>
+<!-- 增加地图高度 -->
+<style>
+#mapDiv { height: 600px; }
+</style>
+<!-- 创建一个 地图的div id 必须有 但是自定义 -->
+<div id="mapDiv"></div>
+<script>
+        var url = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+        //初始化 地图
+        var leafletMap = L.map('mapDiv').setView([41, 123], 5);
+        //将图层加载到地图上，并设置最大的聚焦还有map样式
+        L.tileLayer(url, {
+                maxZoom: 18,
+                id: 'mapbox.streets'
+        }).addTo(leafletMap);
+        //增加一个marker ，地图上的标记，并绑定了一个popup，默认打开
+        L.marker([41, 123]).addTo(leafletMap)
+                .bindPopup("<b>Hello world!</b><br />I am a popup.").openPopup();
+        //增加一个圈，设置圆心、半径、样式
+        L.circle([41, 123], 500, {
+                color: 'red',
+                fillColor: '#f03',
+                fillOpacity: 0.5
+        }).addTo(leafletMap).bindPopup("I am a circle.");
+        //增加多边形
+        L.polygon([
+                [41, 123],
+                [39, 121],
+                [41, 126]
+        ]).addTo(leafletMap).bindPopup("I am a polygon.");
+        //为点击地图的事件 增加popup
+        var popup = L.popup();
+        function onMapClick(e) {
+                popup
+                        .setLatLng(e.latlng)
+                        .setContent("You clicked the map at " + e.latlng.toString())
+                        .openOn(leafletMap);
+        }
+        leafletMap.on('click', onMapClick);
+</script>
