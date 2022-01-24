@@ -4,9 +4,16 @@ const OSMurl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 
 const attribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 
-const tiles = L.tileLayer(OSMurl, { attribution });
+const OSMtiles = L.tileLayer(OSMurl, { attribution });
 
-tiles.addTo(map);
+OSMtiles.addTo(map);
+
+const esriWorldTopoMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+   attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
+});
+
+
+const markersCluster = L.markerClusterGroup();
 
 const Clayer = L.circle([30.0444, 31.2357], { radius: 1000 });
 // Clayer.addTo(map)
@@ -137,10 +144,283 @@ const myGeoJson = {
       }
    ]
 }
-L.geoJson(myGeoJson).addTo(map)
 
+let myGeoJsonPolygons = {
+   "type": "FeatureCollection",
+   "features": [
+      {
+         "type": "Feature",
+         "properties": {
+            "stroke": "#555555",
+            "stroke-width": 2,
+            "stroke-opacity": 1,
+            "fill": "#555555",
+            "fill-opacity": 0.5,
+            "POP": 1
+         },
+         "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+               [
+                  [
+                     31.25103950500488,
+                     29.99352264076956
+                  ],
+                  [
+                     31.255245208740234,
+                     29.99352264076956
+                  ],
+                  [
+                     31.255245208740234,
+                     29.996644720796976
+                  ],
+                  [
+                     31.25103950500488,
+                     29.996644720796976
+                  ],
+                  [
+                     31.25103950500488,
+                     29.99352264076956
+                  ]
+               ]
+            ]
+         }
+      },
+      {
+         "type": "Feature",
+         "properties": {
+            "stroke": "#555555",
+            "stroke-width": 2,
+            "stroke-opacity": 1,
+            "fill": "#555555",
+            "fill-opacity": 0.5,
+            "POP": 2
+         },
+         "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+               [
+                  [
+                     31.241254806518555,
+                     29.99352264076956
+                  ],
+                  [
+                     31.246318817138672,
+                     29.99352264076956
+                  ],
+                  [
+                     31.246318817138672,
+                     29.996421718337448
+                  ],
+                  [
+                     31.241254806518555,
+                     29.996421718337448
+                  ],
+                  [
+                     31.241254806518555,
+                     29.99352264076956
+                  ]
+               ]
+            ]
+         }
+      },
+      {
+         "type": "Feature",
+         "properties": {
+            "stroke": "#555555",
+            "stroke-width": 2,
+            "stroke-opacity": 1,
+            "fill": "#555555",
+            "fill-opacity": 0.5,
+            "POP": 3
+         },
+         "geometry": {
+            "type": "Polygon",
+            "coordinates": [
+               [
+                  [
+                     31.235675811767578,
+                     29.993373967842608
+                  ],
+                  [
+                     31.23842239379883,
+                     29.993373967842608
+                  ],
+                  [
+                     31.23842239379883,
+                     29.996198715376895
+                  ],
+                  [
+                     31.235675811767578,
+                     29.996198715376895
+                  ],
+                  [
+                     31.235675811767578,
+                     29.993373967842608
+                  ]
+               ]
+            ]
+         }
+      }
+   ]
+}
+let myGeoJsonPoints = {
+   "type": "FeatureCollection",
+   "features": [
+      {
+         "type": "Feature",
+         "properties": {
+            "marker-color": "#7e7e7e",
+            "marker-size": "medium",
+            "marker-symbol": "",
+            "ID": 1
+         },
+         "geometry": {
+            "type": "Point",
+            "coordinates": [
+               31.23713493347168,
+               30.00571306296319
+            ]
+         }
+      },
+      {
+         "type": "Feature",
+         "properties": {
+            "marker-color": "#7e7e7e",
+            "marker-size": "medium",
+            "marker-symbol": "",
+            "ID": 2
+         },
+         "geometry": {
+            "type": "Point",
+            "coordinates": [
+               31.246919631958004,
+               30.008834759489474
+            ]
+         }
+      },
+      {
+         "type": "Feature",
+         "properties": {
+            "marker-color": "#7e7e7e",
+            "marker-size": "medium",
+            "marker-symbol": "",
+            "ID": 3
+         },
+         "geometry": {
+            "type": "Point",
+            "coordinates": [
+               31.253957748413086,
+               30.008091507321193
+            ]
+         }
+      },
+      {
+         "type": "Feature",
+         "properties": {
+            "marker-color": "#7e7e7e",
+            "marker-size": "medium",
+            "marker-symbol": "",
+            "ID": 4
+         },
+         "geometry": {
+            "type": "Point",
+            "coordinates": [
+               31.247692108154297,
+               30.00378053493808
+            ]
+         }
+      },
+      {
+         "type": "Feature",
+         "properties": {
+            "marker-color": "#7e7e7e",
+            "marker-size": "medium",
+            "marker-symbol": "",
+            "ID": 5
+         },
+         "geometry": {
+            "type": "Point",
+            "coordinates": [
+               31.23576164245605,
+               29.994563345023284
+            ]
+         }
+      }
+   ]
+}
 
-L.marker([29.998874, 31.253835]).addTo(map)
-   .bindPopup('Cairo')
-   .openPopup();
-31.253835, 29.998874
+//Add to map Direcrt
+// L.geoJson(myGeoJson).addTo(map)
+
+let photoTEST = '<img src="https://static.pexels.com/photos/189349/pexels-photo-189349.jpeg" height="150px" width="150px"/>';
+
+// Icon Styles
+let myIcon1 = L.icon({
+   iconUrl: 'location.png',
+   iconSize: [100, 100],
+});
+
+let myIcon2 = L.icon({
+   iconUrl: 'location2.png',
+   iconSize: [100, 100],
+});
+
+let myIcon3 = L.icon({
+   iconUrl: 'location3.png',
+   iconSize: [100, 100],
+});
+
+let pointsGeoJsonStyled = L.geoJson(myGeoJsonPoints, {
+   pointToLayer: function (geoJsonPoint, latlng) {
+      // let pointID = geoJsonFeature.properties.POP
+      switch (geoJsonPoint.properties.ID) {
+         case (geoJsonPoint.properties.ID <= 3): return L.marker(latlng, { icon: myIcon1 });
+         case 4: return markersCluster.addLayer(L.marker(latlng, { icon: myIcon2 }));
+         case 5: return markersCluster.addLayer(L.marker(latlng, { icon: myIcon3 }));
+         default: return markersCluster.addLayer(L.marker(latlng, { icon: myIcon1 }));
+      }
+   }
+});
+
+let PolyGeoJsonStyled = L.geoJson(myGeoJsonPolygons, {
+   style: function (geoJsonFeature) {
+      // let polyID = geoJsonFeature.properties.POP
+      switch (geoJsonFeature.properties.POP) {
+         case 1: return { color: "#ff0000" };
+         case 2: return { color: "#0000ff" };
+         default: return { color: "#09908f" };
+      }
+   }
+}).bindPopup(function (geoJsonFeature) {
+   console.log(geoJsonFeature.feature.properties.POP)
+   return (geoJsonFeature.feature.properties.POP).toString();
+})
+// L.featureGroup([pointsGeoJsonStyled, PolyGeoJsonStyled])
+// pointsGeoJsonStyled.addTo(map)
+// PolyGeoJsonStyled.addTo(map)
+
+map.on('click', function (eventInfo) {
+   console.log(eventInfo)
+})
+
+map.on('dblclick', function (eventInfo) {
+   console.log("dblclick" + eventInfo)
+})
+
+// Layers Ctrl
+
+const basemapLayers = {
+   "OpenStreetMap": OSMtiles,
+   "ESRI": esriWorldTopoMap
+}
+
+const overlays = {
+   "Points": pointsGeoJsonStyled,
+   "Polygons": PolyGeoJsonStyled
+};
+
+const layerCtrl = L.control.layers(basemapLayers, overlays)
+layerCtrl.addTo(map)
+// markersCluster.addLayer(L.marker(getRandomLatLng(map)));
+map.addLayer(markersCluster);
