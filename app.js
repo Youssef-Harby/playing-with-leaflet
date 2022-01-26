@@ -395,32 +395,42 @@ let PolyGeoJsonStyled = L.geoJson(myGeoJsonPolygons, {
 }).bindPopup(function (geoJsonFeature) {
    console.log(geoJsonFeature.feature.properties.POP)
    return (geoJsonFeature.feature.properties.POP).toString();
-})
+});
 // L.featureGroup([pointsGeoJsonStyled, PolyGeoJsonStyled])
 // pointsGeoJsonStyled.addTo(map)
 // PolyGeoJsonStyled.addTo(map)
 
 map.on('click', function (eventInfo) {
    console.log(eventInfo)
-})
+});
 
 map.on('dblclick', function (eventInfo) {
    console.log("dblclick" + eventInfo)
-})
+});
+
+// Fetch From Geoserver GeoJson
+fetch('http://ec2-3-126-240-167.eu-central-1.compute.amazonaws.com:8080/geoserver/topp/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=topp%3Astates&maxFeatures=50&outputFormat=application%2Fjson').then(function (response) {
+   return response.json()
+}).then(function (data) {
+   console.log(data)
+   let myLayer = L.geoJson(data)
+   myLayer.addTo(map)
+   console.log(myLayer);
+});
 
 // Layers Ctrl
-
 const basemapLayers = {
    "OpenStreetMap": OSMtiles,
    "ESRI": esriWorldTopoMap
-}
+};
 
 const overlays = {
    "Points": pointsGeoJsonStyled,
-   "Polygons": PolyGeoJsonStyled
+   "Polygons": PolyGeoJsonStyled,
+   // "GeoServer": GGG
 };
 
-const layerCtrl = L.control.layers(basemapLayers, overlays)
-layerCtrl.addTo(map)
+const layerCtrl = L.control.layers(basemapLayers, overlays);
+layerCtrl.addTo(map);
 // markersCluster.addLayer(L.marker(getRandomLatLng(map)));
 map.addLayer(markersCluster);
