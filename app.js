@@ -8,14 +8,19 @@ const OSMtiles = L.tileLayer(OSMurl, { attribution });
 
 OSMtiles.addTo(map);
 
+// China Map
+const normalm = L.tileLayer.chinaProvider('TianDiTu.Normal.Map');
+const normala = L.tileLayer.chinaProvider('TianDiTu.Normal.Annotion');
+const imgm = L.tileLayer.chinaProvider('TianDiTu.Satellite.Map')
+const imga = L.tileLayer.chinaProvider('TianDiTu.Satellite.Annotion')
+
+// Esri Def Map
 const esriWorldTopoMap = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
    attribution: 'Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community'
 });
 
-
 const markersCluster = L.markerClusterGroup();
 
-const Clayer = L.circle([30.0444, 31.2357], { radius: 1000 });
 // Clayer.addTo(map)
 const myGeoJson = {
    "type": "FeatureCollection",
@@ -357,17 +362,17 @@ let photoTEST = '<img src="https://static.pexels.com/photos/189349/pexels-photo-
 
 // Icon Styles
 let myIcon1 = L.icon({
-   iconUrl: 'location.png',
+   iconUrl: './img/location.png',
    iconSize: [100, 100],
 });
 
 let myIcon2 = L.icon({
-   iconUrl: 'location2.png',
+   iconUrl: './img/location2.png',
    iconSize: [100, 100],
 });
 
 let myIcon3 = L.icon({
-   iconUrl: 'location3.png',
+   iconUrl: './img/location3.png',
    iconSize: [100, 100],
 });
 
@@ -393,7 +398,7 @@ let PolyGeoJsonStyled = L.geoJson(myGeoJsonPolygons, {
       }
    }
 }).bindPopup(function (geoJsonFeature) {
-   console.log(geoJsonFeature.feature.properties.POP)
+   // console.log(geoJsonFeature.feature.properties.POP)
    return (geoJsonFeature.feature.properties.POP).toString();
 });
 // L.featureGroup([pointsGeoJsonStyled, PolyGeoJsonStyled])
@@ -409,28 +414,43 @@ map.on('dblclick', function (eventInfo) {
 });
 
 // Fetch From Geoserver GeoJson
-fetch('http://ec2-3-126-240-167.eu-central-1.compute.amazonaws.com:8080/geoserver/topp/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=topp%3Astates&maxFeatures=50&outputFormat=application%2Fjson').then(function (response) {
+// FIX HTTPS
+fetch('https://geoserver.gisegypt.org/geoserver/topp/ows?service=WFS&version=2.0.0&request=GetFeature&typeName=topp%3Astates&maxFeatures=50&outputFormat=application%2Fjson').then(function (response) {
    return response.json()
 }).then(function (data) {
-   console.log(data)
-   let myLayer = L.geoJson(data)
+   // console.log(data)
+   let myLayer = L.geoJson(data, {
+      onEachFeature: function (feature, layer) {
+         // Feature is the json object present every feature from all geojson req/file
+         // Layer (polygon/line/point)
+         // console.log(feature, layer);
+         let PropFet = feature.properties.STATE_NAME
+         layer.bindPopup(PropFet)
+      }
+   })
    myLayer.addTo(map)
-   console.log(myLayer);
+   // console.log(myLayer);
+   layerCtrl.addOverlay(myLayer, "Geoserver GeoJson")
 });
 
 // Layers Ctrl
 const basemapLayers = {
    "OpenStreetMap": OSMtiles,
-   "ESRI": esriWorldTopoMap
+   "ESRI": esriWorldTopoMap,
+   "TianDiTu": normalm,
+   "Chna Satellite": imgm
+
 };
 
 const overlays = {
    "Points": pointsGeoJsonStyled,
    "Polygons": PolyGeoJsonStyled,
-   // "GeoServer": GGG
+   "TianDiTu Ann": normala,
+   "Chna Satellite Ann": imga
 };
+
 
 const layerCtrl = L.control.layers(basemapLayers, overlays);
 layerCtrl.addTo(map);
-// markersCluster.addLayer(L.marker(getRandomLatLng(map)));
+
 map.addLayer(markersCluster);
