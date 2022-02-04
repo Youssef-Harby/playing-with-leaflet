@@ -442,13 +442,21 @@ const basemapLayers = {
 
 };
 
-const overlays = {
+var overlays = {
    "Points": pointsGeoJsonStyled,
    "Polygons": PolyGeoJsonStyled,
    "TianDiTu Ann": normala,
    "Chna Satellite Ann": imga
 };
 
+map.pm.addControls({
+   position: 'topleft',
+   drawCircle: false,
+});
+
+map.on('pm:drawstart', (e) => {
+   console.log(e);
+});
 
 const layerCtrl = L.control.layers(basemapLayers, overlays);
 layerCtrl.addTo(map);
