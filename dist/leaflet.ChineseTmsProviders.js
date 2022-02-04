@@ -18,7 +18,7 @@ if (L.Proj) {
 
 L.TileLayer.ChinaProvider = L.TileLayer.extend({
 
-    initialize: function(type, options) { // (type, Object)
+    initialize: function (type, options) { // (type, Object)
         var providers = L.TileLayer.ChinaProvider.providers;
 
         options = options || {}
@@ -44,16 +44,16 @@ L.TileLayer.ChinaProvider = L.TileLayer.extend({
 L.TileLayer.ChinaProvider.providers = {
     TianDiTu: {
         Normal: {
-            Map: "//t{s}.tianditu.gov.cn/DataServer?T=vec_w&X={x}&Y={y}&L={z}&tk={key}",
-            Annotion: "//t{s}.tianditu.gov.cn/DataServer?T=cva_w&X={x}&Y={y}&L={z}&tk={key}"
+            Map: "https://t{s}.tianditu.gov.cn/DataServer?T=vec_w&X={x}&Y={y}&L={z}&tk={key}",
+            Annotion: "https://t{s}.tianditu.gov.cn/DataServer?T=cva_w&X={x}&Y={y}&L={z}&tk={key}"
         },
         Satellite: {
-            Map: "//t{s}.tianditu.gov.cn/DataServer?T=img_w&X={x}&Y={y}&L={z}&tk={key}",
-            Annotion: "//t{s}.tianditu.gov.cn/DataServer?T=cia_w&X={x}&Y={y}&L={z}&tk={key}"
+            Map: "https://t{s}.tianditu.gov.cn/DataServer?T=img_w&X={x}&Y={y}&L={z}&tk={key}",
+            Annotion: "https://t{s}.tianditu.gov.cn/DataServer?T=cia_w&X={x}&Y={y}&L={z}&tk={key}"
         },
         Terrain: {
-            Map: "//t{s}.tianditu.gov.cn/DataServer?T=ter_w&X={x}&Y={y}&L={z}&tk={key}",
-            Annotion: "//t{s}.tianditu.gov.cn/DataServer?T=cta_w&X={x}&Y={y}&L={z}&tk={key}"
+            Map: "https://t{s}.tianditu.gov.cn/DataServer?T=ter_w&X={x}&Y={y}&L={z}&tk={key}",
+            Annotion: "https://t{s}.tianditu.gov.cn/DataServer?T=cta_w&X={x}&Y={y}&L={z}&tk={key}"
         },
         Subdomains: ['0', '1', '2', '3', '4', '5', '6', '7'],
         key: "174705aebfe31b79b3587279e211cb9a"
@@ -115,6 +115,6 @@ L.TileLayer.ChinaProvider.providers = {
 
 };
 
-L.tileLayer.chinaProvider = function(type, options) {
+L.tileLayer.chinaProvider = function (type, options) {
     return new L.TileLayer.ChinaProvider(type, options);
 };
